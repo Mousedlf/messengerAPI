@@ -1,0 +1,15 @@
+.modalDisplay{
+    display: block
+}
+
+.registerDisplay{
+    display: none;
+}
+
+.registerDisplayBlock{
+    display: block;
+}
+
+.activeReaction{
+    color: green;
+}

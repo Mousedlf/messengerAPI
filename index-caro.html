@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css">
+    <script src="https://kit.fontawesome.com/886b4563f9.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="style.css">
+    <title>Messagerie</title>
+</head>
+
+<body class="m-0 p-0">
+
+    <div class="container m-auto row vw-100 vh-100">
+
+        <!-- Navbars -->
+        <div class="col-12 col-md-1 border-end border-secondary d-flex flex-column pt-4 align-items-center border-end border-secondary">
+                <span id="yourUsername" class="my-4 fw-bold "></span>
+                <span id="messagesPage" class="mb-3"><i class="bi bi-chat-fill text-secondary"></i></span>
+
+        </div>
+        <!-- Main: Messages -->
+        <div  class="col-12 col-md-11 position-relative vh-100">
+            <!-- Messages -->
+            <div id="main" class="overflow-scroll vh-100">
+            <!-- Input and Send-->
+                <div class="position-absolute bottom-0 pb-4 pt-3 bg-white w-100 d-flex align-items-center px-5">
+                    <input type="text" name="" id="messageField" placeholder="Aa" class="bg-secondary form-control rounded-pill ">
+                    <button class="btn btn-primary" id="sendMessage">Send</button>
+                </div>
+            </div>
+    </div>
+
+        <!-- Modal -->
+        <div class="modal modalDisplay" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <div class="container d-flex flex-column">
+                            <h2>Log In</h2>
+                            <input type="text" name="" id="usernameLogin" placeholder="username">
+                            <input type="password" name="" id="passwordLogin" placeholder="password">
+                            <button class="btn btn-primary" id="loginButton">log in</button>
+                            <span id="errorMessageLogin" class="text-danger"></span>
+                        </div>
+                        <span id="displayRegisterPage" class="mb-3"><i class="bi bi-box-arrow-in-right text-secondary">Register</i></span>
+                        <div class="container d-flex flex-column">
+                            <div class="register registerDisplay container">
+                                <h2>Register</h2>
+                                <input type="text" id="regUsername" placeholder="username">
+                                <input type="password" id="regPassword" placeholder="password">
+                                <button class="btn btn-primary" id="register">register</button>
+                                <span id="errorMessageRegister" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+<p id="respondField"></p>
+
+
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="main-caro.js"></script>
+
+</body>
+</html>
