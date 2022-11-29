@@ -5,19 +5,93 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="style.css">
-    <title>Messagerie API</title>
+  <script src="https://kit.fontawesome.com/886b4563f9.js" crossorigin="anonymous"></script>
+  <title>Messagerie 2.0</title>
 </head>
-<body>
-<div class="navbar bg-warning">
-    <button class="btn btn-success" id="messagesPage">Messages</button>
-    <button class="btn btn-success" id="registerPage">Register</button>
-    <button class="btn btn-success" id="loginPage">Log in</button>
-</div>
 
-<div id="main" class="container mt-5 border border border-dark">
+<body class="vh-100 vw-100">
 
+    <!-- Messagerie -->
+    <div class="d-flex row m-0 p-0 ">
+        <!-- Icons Navbar/Menu -->
+        <div class="bg-info col-1 border-end border-white d-flex justify-content-between flex-column py-3">
+            <div>
+                <span id="yourUsername" class="fw-bold displayFromMedium"></span>
+                <div id="messagesPage" class="d-flex align-items-center">
+                    <i class="fa-sharp fa-solid fa-comment"></i>
+                    <span class="displayFromMedium ms-2">Chat</span>
+                </div>
+
+            </div>
+            <div>
+                <div class="d-flex align-items-center mb-3">
+                    <i class="fa-solid fa-user"></i>
+                    <span class="displayFromMedium ms-2">My profile</span>
+                </div>
+                <div class="d-flex align-items-center">
+                    <i class="fa-sharp fa-solid fa-right-from-bracket"></i>
+                    <span class="displayFromMedium ms-2">Sign out</span>
+                </div>
+            </div>
+        </div>
+        <!-- Differentes conversations -->
+        <div class="d-flex col-1 col-md-2 border-end border-secondary flex-column">
+            <span class="displayFromMedium h5 fw-bold border-bottom py-3">Discussions</span>
+            <ul class="list-group mt-3">
+                <li class="d-flex">
+                    <span class="circle bg-danger">s</span>
+                    <p class="displayFromMedium">Jean-Michel</p>
+                </li>
+                <li class="d-flex">
+                    <span class="circle bg-danger">s</span>
+                    <p class="displayFromMedium">Jean-Michel</p>
+                </li>
+
+            </ul>
+
+        </div>
+        <!-- Conversation -->
+        <div class="col-10 col-md-9 row vh-100">
+            <!-- Infos about conversation -->
+            <div class="shadow-sm  hauteur10">
+                <p>ICI nom de la conversation ou personne</p>
+            </div>
+            <!-- Message container -->
+            <div id="main" class="px-5 hauteur80 overflow-auto"></div>
+            <!-- MessageField and Send button -->
+            <div class="d-flex align-items-center hauteur10 pb-2">
+                <input type="text" name="" id="messageField" placeholder="Aa" class="bg-secondary form-control rounded-pill ">
+                <i id="sendMessage" class="mx-3 fa-sharp fa-solid fa-paper-plane text-secondary"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pop up-->
+    <div class="popup shadow-lg">
+        <p class="text-success">You have to be logged in to see the messages.</p>
+        <div class="d-flex flex-column">
+            <span class="fw-bold text-uppercase mt-1">Log In</span>
+            <input type="text" name="" id="usernameLogin" placeholder="username">
+            <input type="password" name="" id="passwordLogin" placeholder="password" class="mt-1">
+            <button class="btn btn-primary mt-2" id="loginButton">log in</button>
+            <span id="errorMessageLogin" class="text-danger"></span>
+        </div>
+        <span class="mt-3 mb-0 d-flex">
+            <p>No account yet? </p>
+            <p id="displayRegisterPage" class="ms-2 text-decoration-underline">Register here</p>
+        </span>
+        <div class="register d-none container d-flex">
+            <div class=" container d-flex flex-column">
+                <span class="fw-bold text-uppercase mt-1">Register</span>
+                <input type="text" id="regUsername" placeholder="username">
+                <input type="password" id="regPassword" placeholder="password" class="mt-1">
+                <button class="btn btn-primary mt-2" id="register">register</button>
+                <span id="errorMessageRegister" class="text-danger"></span>
+            </div>
+        </div>
 
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>

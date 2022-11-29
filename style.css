@@ -1,15 +1,44 @@
-.modalDisplay{
-    display: block
-}
-
-.registerDisplay{
+.popup {
+    background-color: white;
+    width: 450px;
+    padding: 30px 40px;
+    position: absolute;
+    transform: translate(-50%, -50%);
+    left: 50%;
+    top: 50%;
+    border-radius: 8px;
     display: none;
-}
-
-.registerDisplayBlock{
-    display: block;
 }
 
 .activeReaction{
     color: green;
 }
+
+.hauteur10{
+    height: 10%;
+}
+
+.hauteur50{
+    height: 5%;
+}
+
+.hauteur80{
+    height:80%;
+}
+
+.circle{
+    border-radius:90%;
+    width: 25px;
+    height: 25px
+}
+
+.displayFromMedium{
+    display:none
+}
+
+@media (min-width: 48rem) {
+    .displayFromMedium{
+        display:block;
+    }
+}
+

@@ -1,30 +1,30 @@
 const baseURL = "https://b1messenger.tk/"
 
-
 const mainContainer = document.querySelector("#main")
 const messagesPageButton = document.querySelector("#messagesPage")
 const displayRegisterPageButton = document.querySelector("#displayRegisterPage")
-
 const loginPageButton = document.querySelector("#loginPage")
 const yourUsername = document.querySelector("#yourUsername")
 const landingPageModal = document.querySelector('.modal')
 const registerModal = document.querySelector('.register')
 
 let token = null
+let myUsername
 
 const regUsername = document.querySelector("#regUsername")
 const regPassword = document.querySelector("#regPassword")
 const regButton = document.querySelector("#register")
 
-const responseField = document.querySelector('#responseField')
 
 regButton.addEventListener("click", () => {
     register(regUsername.value, regPassword.value)
 })
 messagesPageButton.addEventListener("click", displayMessagesPage)
-
 loginButton.addEventListener("click", login)
 displayRegisterPageButton.addEventListener("click", displayRegistry)
+
+const messageContent = document.querySelector('#messageContent')
+
 
 
 function displayRegistry() {
@@ -44,19 +44,33 @@ function display(content) {
 }
 
 function getMessageTemplate(message) {
-    let template = `
+    let template
+    if(message.author.username == myUsername){
+        template = `
+                     <div id="${message.id}" class="d-flex align-items-center">
+                        <p>${message.author.username}</p>
+                        <p id="messageContent" class="ms-2 py-1 px-3 bg-primary rounded-pill">${message.content}
+                            <i id="${message.id}" class="ms-4 edit fa-solid fa-pen"></i>
+                            <i id="${message.id}" class="delete ms-2 fa-solid fa-trash"></i>
+                        </p>
+                        <i id="${message.id}" class="happy ms-2 fa-solid fa-face-laugh"></i>
+                     </div>
+                    `
+    } else {
+        template = `
                     <div id="${message.id}" class="d-flex align-items-center">
                         <p>${message.author.username}</p>
                         <p class="ms-2 py-1 px-3 bg-primary rounded-pill">${message.content}</p>
-                        <i class="happy ms-2 fa-solid fa-face-laugh"></i>
+                        <i id="${message.id}" class="happy ms-2 fa-solid fa-face-laugh"></i>
                      </div>
                     `
+    }
     return template
 }
 
-async function putHappyReaction(){
-
-    let url = `${baseURL}api/reaction/message/${message.id}/happy`
+// ici à revoir classList.add et .remove
+async function putHappyReaction(id){
+    let url = `${baseURL}api/reaction/message/${id}/happy`
     let fetchParams = {
         method: 'GET',
         headers: {
@@ -68,13 +82,51 @@ async function putHappyReaction(){
         .then(response => response.json())
         .then(reactions => {
             console.log(reactions)
-
-            /*reactionLol.innerHTML = " " + reactions.typeCount
+            // .innerHTML = " " + reactions.typeCount
             if (reactions.status === "reacted") {
-                reactionLol.classList.add('activeReaction')
+                //.classList.add('activeReaction')
             } else {
-                reactionLol.classList.remove('activeReaction')
-            }*/
+                //.classList.remove('activeReaction')
+            }
+
+        })
+}
+
+function editMyMessage(id){
+    let url =`${baseURL}api/messages/${id}/edit`
+    let body = {
+        content: messageField.value
+    }
+    let fetchParams = {
+        method : 'PUT',
+        headers:{
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
+        },
+        body : JSON.stringify(body)
+    }
+    fetch(url, fetchParams)
+        .then(response => response.json())
+        .then(data =>{
+            console.log(data)
+
+        })
+}
+
+function deleteMyMessage(id){
+    let url = `${baseURL}api/messages/delete/${id}`
+    let fetchParams = {
+        method: 'DELETE',
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
+        }
+    }
+    return  fetch(url, fetchParams)
+        .then(response => response.json())
+        .then(data => {
+            console.log(data)
+            displayMessagesPage()
         })
 }
 
@@ -88,7 +140,7 @@ function getMessagesTemplate(messages) {
 }
 
 function getMessageFieldTemplate() {
-    let template = `<div class="position-absolute bottom-0 pb-4 pt-3 bg-white w-100 d-flex align-items-center px-5">
+    let template = `<div class="position-absolute bottom-0 mb-4 mt-3 bg-white w-100 d-flex align-items-center">
                         <input type="text" name="" id="messageField" placeholder="Aa" class="bg-secondary form-control rounded-pill ">
                         <button class="btn btn-primary" id="sendMessage">Send</button>                    
                     </div>
@@ -133,12 +185,28 @@ async function displayMessagesPage() {
         const sendButton = document.querySelector("#sendMessage")
         sendButton.addEventListener("click", sendMessage)
 
-        //Reaction häppi :)
+        //Get all reaction häppi :)
         const emojisHappy = document.querySelectorAll('.happy')
         emojisHappy.forEach(emojiHappy =>{
             emojiHappy.addEventListener('click', ()=>{
-                console.log('häppi?')
-                putHappyReaction()
+                putHappyReaction(emojiHappy.id)
+
+            })
+        })
+
+        // Get all Delete buttons
+        const delButtons = document.querySelectorAll('.delete')
+        delButtons.forEach(delButton =>{
+            delButton.addEventListener('click', ()=>{
+                deleteMyMessage(delButton.id)
+            })
+        })
+
+        // Get all Edit buttons
+        const editButtons = document.querySelectorAll('.edit')
+        editButtons.forEach(editButton =>{
+            editButton.addEventListener('click', ()=>{
+                editMyMessage(editButton.id)
             })
         })
     })
@@ -206,7 +274,8 @@ function login() {
         .then(response => response.json())
         .then(data => {
             if (data.token) {
-                token = data.token
+                token = data.token;
+                myUsername = usernameLogin.value;
                 displayMessagesPage()
                 landingPageModal.classList.remove('modalDisplay')
                 yourUsername.innerHTML = 'Hello ' + usernameLogin.value + '!'
