@@ -18,15 +18,15 @@
     <div class="d-flex row m-0 p-0 ">
         <!-- Icons Navbar/Menu -->
         <div class="bg-info col-1 border-end border-white d-flex justify-content-between flex-column py-3">
-            <div>
-                <span id="yourUsername" class="fw-bold displayFromMedium"></span>
+            <div class="d-flex flex-column align-items-center">
+                <span id="yourUsername" class="fw-bold displayFromMedium mb-4"></span>
                 <div id="messagesPage" class="d-flex align-items-center">
                     <i class="fa-sharp fa-solid fa-comment"></i>
                     <span class="displayFromMedium ms-2">Chat</span>
                 </div>
 
             </div>
-            <div>
+            <div class="d-flex flex-column align-items-center">
                 <div class="d-flex align-items-center mb-3">
                     <i class="fa-solid fa-user"></i>
                     <span class="displayFromMedium ms-2">My profile</span>
@@ -38,15 +38,13 @@
             </div>
         </div>
         <!-- Differentes conversations -->
-        <div class="d-flex col-1 col-md-2 border-end border-secondary flex-column">
+        <div class="d-flex col-1 col-md-2 border-end border-secondary border-opacity-50 flex-column">
             <span class="displayFromMedium h5 fw-bold border-bottom py-3">Discussions</span>
             <ul class="list-group mt-3">
                 <li class="d-flex">
-                    <span class="circle bg-danger">s</span>
                     <p class="displayFromMedium">Jean-Michel</p>
                 </li>
                 <li class="d-flex">
-                    <span class="circle bg-danger">s</span>
                     <p class="displayFromMedium">Jean-Michel</p>
                 </li>
 
@@ -56,18 +54,40 @@
         <!-- Conversation -->
         <div class="col-10 col-md-9 row vh-100">
             <!-- Infos about conversation -->
-            <div class="shadow-sm  hauteur10">
-                <p>ICI nom de la conversation ou personne</p>
+            <div class="shadow-sm hauteur10 d-flex align-items-center">
+                <p class="h5">ICI nom de la conversation ou personne</p>
             </div>
             <!-- Message container -->
-            <div id="main" class="px-5 hauteur80 overflow-auto"></div>
+            <div id="main" class="messageContainer px-5 hauteur80 overflow-auto"></div>
             <!-- MessageField and Send button -->
             <div class="d-flex align-items-center hauteur10 pb-2">
+                <i id="refresh" class="fa-solid fa-arrows-rotate text-secondary mx-3 "></i>
                 <input type="text" name="" id="messageField" placeholder="Aa" class="bg-secondary form-control rounded-pill ">
                 <i id="sendMessage" class="mx-3 fa-sharp fa-solid fa-paper-plane text-secondary"></i>
             </div>
         </div>
     </div>
+
+
+    <!--<aside id="log">
+        <p>Open chapters:</p>
+        <div data-id="ch1" hidden>I</div>
+        <div data-id="ch2" hidden>II</div>
+    </aside>
+    <section id="summaries">
+        <p>Chapter summaries:</p>
+        <details id="ch1">
+            <summary>Chapter I</summary>
+            Philosophy reproves Boethius for the foolishness of his complaints against
+            Fortune. Her very nature is caprice.
+        </details>
+        <details id="ch2">
+            <summary>Chapter II</summary>
+            Philosophy in Fortune's name replies to Boethius' reproaches, and proves
+            that the gifts of Fortune are hers to give and to take away.
+        </details>
+    </section>-->
+
 
     <!-- Pop up-->
     <div class="popup shadow-lg">
@@ -96,5 +116,6 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
 <script src="main.js"></script>
+
 </body>
 </html>

@@ -2,9 +2,8 @@ const baseURL = "https://b1messenger.tk/"
 
 const mainContainer = document.querySelector("#main")
 const messagesPageButton = document.querySelector("#messagesPage")
-const loginPageButton = document.querySelector("#loginPage")
+//const loginPageButton = document.querySelector("#loginPage")
 const yourUsername = document.querySelector("#yourUsername")
-const landingPageModal = document.querySelector('.modal')
 
 let token = null
 let myUsername
@@ -16,6 +15,7 @@ const regPassword = document.querySelector("#regPassword")
 const regButton = document.querySelector("#register")
 
 const errorMessageRegister = document.querySelector('#errorMessageRegister')
+const refreshMessages = document.querySelector('#refresh')
 
 regButton.addEventListener("click", () => {
     register(regUsername.value, regPassword.value)
@@ -23,16 +23,14 @@ regButton.addEventListener("click", () => {
 messagesPageButton.addEventListener("click", displayMessagesPage)
 loginButton.addEventListener("click", login)
 
+refreshMessages.addEventListener('click', displayMessagesPage)
+
 displayRegisterPageButton.addEventListener("click", displayRegistry)
 function displayRegistry() {
     registerPopUp.classList.remove('d-none')
-    console.log('yup')
 }
 
-const messageContent = document.querySelector('#messageContent')
 
-
-//a revoir?
 window.addEventListener("load", function() {
     setTimeout(
         function open(event) {
@@ -46,7 +44,6 @@ window.addEventListener("load", function() {
 function clearMainContainer() {
     mainContainer.innerHTML = ""
 }
-
 function display(content) {
     //vider la div principale
     clearMainContainer()
@@ -55,7 +52,15 @@ function display(content) {
 
 }
 
+
 function getMessageTemplate(message) {
+
+    let timeStamp = message.createdAt
+    let date = timeStamp.split("T")[0]
+    let time = timeStamp.substring(11,16)
+    let essai =new Date(timeStamp)
+    console.log(essai)
+
     let template
     if(message.author.username == myUsername){
         template = `
@@ -64,15 +69,30 @@ function getMessageTemplate(message) {
                             <i id="${message.id}" class="ms-4 edit fa-solid fa-pen"></i>
                             <i id="${message.id}" class="delete ms-2 fa-solid fa-trash"></i>
                         </p>
+                        <p class="badge text-secondary fw-normal ms-2">${time}, ${date}</p>
                         <i id="${message.id}" class="happy ms-2 fa-solid fa-face-laugh"></i>
+                        
                      </div>
                     `
     } else {
         template = `
                     <div id="${message.id}" class="d-flex align-items-center">
-                        <span class="circle bg-danger"></span>
+<!--                        <span class="circle bg-danger"></span>-->
+                        <p>${message.author.username}</p>
                         <p class="text-white ms-2 py-1 px-3 bg-primary rounded-pill">${message.content}</p>
-                        <i id="${message.id}" class="happy ms-2 fa-solid fa-face-laugh"></i>
+                    <div>
+                    <div class="d-flex">
+                        <p class="badge text-secondary fw-normal">${time}, ${date}</p>
+                        <i id="dotMenuIcons" class="fa-solid fa-ellipsis-vertical ms-2" ></i>
+                        <div class="dotMenuItems" hidden>
+                            <i id="${message.id}" class="happy  ms-2 fa-solid fa-face-laugh"></i>
+                            <i id="${message.id}" class="love ms-2 fa-solid fa-heart"></i>
+                            <i id="${message.id}" class="sad ms-2 fa-solid fa-face-frown"></i>
+                        </div>
+                    </div>
+                    
+</div>
+                    
                      </div>
                     `
     }
@@ -80,51 +100,35 @@ function getMessageTemplate(message) {
 }
 
 
-// ici à revoir classList.add et .remove
-async function putHappyReaction(id){
-    let url = `${baseURL}api/reaction/message/${id}/happy`
-    let fetchParams = {
-        method: 'GET',
-        headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`
-        }
-    }
-    return await fetch(url, fetchParams)
-        .then(response => response.json())
-        .then(reactions => {
-            console.log(reactions)
-            // .innerHTML = " " + reactions.typeCount
-            if (reactions.status === "reacted") {
-                //.classList.add('activeReaction')
-            } else {
-                //.classList.remove('activeReaction')
-            }
 
-        })
-}
+
+
 
 function editMyMessage(id){
-    let url =`${baseURL}api/messages/${id}/edit`
-    let body = {
-        content: messageField.value
+    if(messageField.value == ""){
+        console.log('empty')
+    } else {
+        let url =`${baseURL}api/messages/${id}/edit`
+        let body = {
+            content: messageField.value
+        }
+        let fetchParams = {
+            method : 'PUT',
+            headers:{
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
+            },
+            body : JSON.stringify(body)
+        }
+        fetch(url, fetchParams)
+            .then(response => response.json())
+            .then(data =>{
+                console.log(data)
+                messageField.value = ""
+            })
     }
-    let fetchParams = {
-        method : 'PUT',
-        headers:{
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`
-        },
-        body : JSON.stringify(body)
-    }
-    fetch(url, fetchParams)
-        .then(response => response.json())
-        .then(data =>{
-            console.log(data)
 
-        })
 }
-
 function deleteMyMessage(id){
     let url = `${baseURL}api/messages/delete/${id}`
     let fetchParams = {
@@ -147,11 +151,10 @@ function getMessagesTemplate(messages) {
 
     let messagesTemplate = ""
     messages.forEach(message => {
-        messagesTemplate += getMessageTemplate(message)
+        messagesTemplate = getMessageTemplate(message) + messagesTemplate
     })
     return messagesTemplate
 }
-
 async function getMessagesFromApi() {
 
     let url = `${baseURL}api/messages/`
@@ -173,8 +176,6 @@ async function getMessagesFromApi() {
             return messages
         })
 }
-
-
 async function displayMessagesPage() {
     //consiste a afficher les messages + le champ d'entrée d'un nouveau message
     let messagesAndMessageField = ""
@@ -192,6 +193,7 @@ async function displayMessagesPage() {
         emojisHappy.forEach(emojiHappy =>{
             emojiHappy.addEventListener('click', ()=>{
                 putHappyReaction(emojiHappy.id)
+                emojiHappy.classList.add('bg-warning')
 
             })
         })
@@ -211,8 +213,34 @@ async function displayMessagesPage() {
                 editMyMessage(editButton.id)
             })
         })
+
+
+//essais
+        function toggle(){
+            const dotMenuItemGroups = document.querySelectorAll(".dotMenuItems")
+            dotMenuItemGroups.forEach(dotMenuItemGroup =>{
+                dotMenuItemGroup.toggleAttribute('hidden')
+                console.log('toggle')
+            })
+        }
+
+
+        // Get all Dot Menus
+        const menuPointsIcons = document.querySelectorAll("#dotMenuIcons")
+        menuPointsIcons.forEach(menuPointsIcon =>{
+            menuPointsIcon.addEventListener('toggle', toggle)
+        })
     })
 }
+
+/*trouvé sur SO, comm de 2017: dans HTML : onmouseover="MouseOver(this);" onmouseout="MouseOut(this);"
+function MouseOver(elem) {
+    elem.style.color = "red";
+}
+function MouseOut(elem) {
+    elem.style.color = "blue";
+}*/
+
 
 function sendMessage() {
     let url = `${baseURL}api/messages/new`
@@ -235,7 +263,7 @@ function sendMessage() {
 }
 
 
-//problème lors affichage messages erreur!
+//problème lors affichage messages erreur et succes !
 function register() {
     let url = `${baseURL}register`
     let body = {
@@ -249,15 +277,13 @@ function register() {
     fetch(url, fetchParams)
         .then(response => response.json())
         .then(data => {
-            if (data === "try with 6+ characters for password") {
+            if (data == "try with 6+ characters for password") {
                 errorMessageRegister.innerHTML = "Try with 6+ chars for password."
-                console.log('carotte 1')
             } else if (data === "username alredy taken") { // pq ça ne marche plus??
                 errorMessageRegister.innerHTML = "Username alredy taken"
-                console.log('carotte 2')
             } else {
-                displayMessagesPage()
                 console.log(data)
+                errorMessageRegister.innerHTML = "Account successfully created. You can log in now!"
             }
         })
 }
@@ -285,12 +311,39 @@ function login() {
                 myUsername = usernameLogin.value;
                 displayMessagesPage()
                 document.querySelector(".popup").style.display = "none";
-                yourUsername.innerHTML = 'Hello ' + usernameLogin.value + '!'
+                yourUsername.innerHTML = 'Welcome ' + usernameLogin.value + '!'
             } else {
                 errorMessageLogin.innerHTML = "Username and password don't match. Try again."
             }
         })
 }
+
+
+
+// ici à revoir classList.add et .remove
+async function putHappyReaction(id){
+    let url = `${baseURL}api/reaction/message/${id}/happy`
+    let fetchParams = {
+        method: 'GET',
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
+        }
+    }
+    return await fetch(url, fetchParams)
+        .then(response => response.json())
+        .then(reactions => {
+            console.log(reactions)
+            console.log(reactions.typeCount)
+            if (reactions.status == "reacted") {
+                //.classList.add('bg-warning')
+            } else {
+                //.classList.remove('activeReaction')
+            }
+
+        })
+}
+
 
 
 

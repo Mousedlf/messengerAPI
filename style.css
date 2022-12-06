@@ -10,6 +10,10 @@
     display: none;
 }
 
+.red{
+   color: red;
+}
+
 .activeReaction{
     color: green;
 }
@@ -40,5 +44,16 @@
     .displayFromMedium{
         display:block;
     }
+}
+
+.messageContainer{
+    display:flex;
+    flex-direction: column-reverse;
+}
+
+
+.showMenuItems{
+    display: block;
+    background-color: blue;
 }
 
