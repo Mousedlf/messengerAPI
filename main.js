@@ -5,6 +5,7 @@ const messagesPageButton = document.querySelector("#messagesPage")
 //const loginPageButton = document.querySelector("#loginPage")
 const yourUsername = document.querySelector("#yourUsername")
 
+
 let token = null
 let myUsername
 
@@ -56,23 +57,32 @@ function display(content) {
 function getMessageTemplate(message) {
 
     let timeStamp = message.createdAt
-    let date = timeStamp.split("T")[0]
+    //let date = timeStamp.split("T")[0]
     let time = timeStamp.substring(11,16)
-    let essai =new Date(timeStamp)
-    console.log(essai)
+
+    let day = timeStamp.substring(8,10)
+    let month = timeStamp.substring(5,7)
+    let year = timeStamp.substring(2,4)
+
+    let date = day +"/"+month+"/"+year
 
     let template
     if(message.author.username == myUsername){
         template = `
+                     <div id="${message.id}" class="editMessageForm mb-3 d-none  d-flex align-items-center">
+                        <input type="text" id="${message.id}" class="editMessageField bg-warning form-control rounded-pill" placeholder="Type in the new version of the message">
+                        <i id="${message.id}" class="sendEdit mx-3 fa-sharp fa-solid fa-paper-plane text-secondary"></i>
+                        <i id="${message.id}" class="fermerEdit fa-solid fa-xmark"></i>
+                     </div>
                      <div id="${message.id}" class="d-flex align-items-center justify-content-start flex-row-reverse">
-                        <p id="messageContent" class="text-white ms-2 py-1 px-3 bg-primary rounded-pill">${message.content}
+                        <p id="messageContent" class="text-white py-1 px-3 bg-primary rounded-pill">${message.content}
                             <i id="${message.id}" class="ms-4 edit fa-solid fa-pen"></i>
                             <i id="${message.id}" class="delete ms-2 fa-solid fa-trash"></i>
                         </p>
                         <p class="badge text-secondary fw-normal ms-2">${time}, ${date}</p>
                         <i id="${message.id}" class="happy ms-2 fa-solid fa-face-laugh"></i>
-                        
                      </div>
+
                     `
     } else {
         template = `
@@ -100,51 +110,6 @@ function getMessageTemplate(message) {
 }
 
 
-
-
-
-
-function editMyMessage(id){
-    if(messageField.value == ""){
-        console.log('empty')
-    } else {
-        let url =`${baseURL}api/messages/${id}/edit`
-        let body = {
-            content: messageField.value
-        }
-        let fetchParams = {
-            method : 'PUT',
-            headers:{
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${token}`
-            },
-            body : JSON.stringify(body)
-        }
-        fetch(url, fetchParams)
-            .then(response => response.json())
-            .then(data =>{
-                console.log(data)
-                messageField.value = ""
-            })
-    }
-
-}
-function deleteMyMessage(id){
-    let url = `${baseURL}api/messages/delete/${id}`
-    let fetchParams = {
-        method: 'DELETE',
-        headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`
-        }
-    }
-    return  fetch(url, fetchParams)
-        .then(response => response.json())
-        .then(data => {
-            console.log(data)
-            displayMessagesPage()
-        })
-}
 
 
 function getMessagesTemplate(messages) {
@@ -207,10 +172,42 @@ async function displayMessagesPage() {
         })
 
         // Get all Edit buttons
+
+        const editMessageForms = document.querySelectorAll('.editMessageForm')
+        editMessageForms.forEach(editMessageForm =>{
+            const closeEditFields = document.querySelectorAll('.fermerEdit')
+            closeEditFields.forEach(closeEditField =>{
+                closeEditField.addEventListener('click', ()=>{
+                    editMessageForm.classList.add('d-none')
+                    console.log('andouille')
+                })
+            })
+
+        })
+
+        const editMessageFields = document.querySelectorAll('.editMessageField')
+        editMessageFields.forEach(editMessageField =>{
+            editMessageField.addEventListener('click', ()=>{
+                console.log(editMessageField.id)
+                editMessageField.classList.remove('bg-warning')
+            })
+        })
+
         const editButtons = document.querySelectorAll('.edit')
         editButtons.forEach(editButton =>{
             editButton.addEventListener('click', ()=>{
-                editMyMessage(editButton.id)
+                console.log(editButton.id)
+                editMessageForms.classList.remove('d-none')
+            })
+        })
+
+        const sendEditButtons = document.querySelectorAll('.sendEdit')
+        sendEditButtons.forEach(sendEditButton =>{
+            sendEditButton.addEventListener('click', ()=>{
+                console.log(sendEditButton.id)
+                sendEditButton.classList.add('text-danger')
+                editMyMessage(sendEditButton.id)
+
             })
         })
 
@@ -223,7 +220,6 @@ async function displayMessagesPage() {
                 console.log('toggle')
             })
         }
-
 
         // Get all Dot Menus
         const menuPointsIcons = document.querySelectorAll("#dotMenuIcons")
@@ -279,11 +275,11 @@ function register() {
         .then(data => {
             if (data == "try with 6+ characters for password") {
                 errorMessageRegister.innerHTML = "Try with 6+ chars for password."
-            } else if (data === "username alredy taken") { // pq ça ne marche plus??
+            } else if (data == "username alredy taken") { // pq ça ne marche plus??
                 errorMessageRegister.innerHTML = "Username alredy taken"
             } else {
                 console.log(data)
-                errorMessageRegister.innerHTML = "Account successfully created. You can log in now!"
+                //errorMessageRegister.innerHTML = "Account successfully created. You can log in now!"
             }
         })
 }
@@ -343,6 +339,49 @@ async function putHappyReaction(id){
 
         })
 }
+
+function editMyMessage(id){
+    /*    if( .value == ""){
+            console.log('empty')
+        } else {*/
+    let url =`${baseURL}api/messages/${id}/edit`
+    let body = {
+        content: "message by default" // comment link le editMessageField correponsant au message?
+    }
+    let fetchParams = {
+        method : 'PUT',
+        headers:{
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
+        },
+        body : JSON.stringify(body)
+    }
+    fetch(url, fetchParams)
+        .then(response => response.json())
+        .then(data =>{
+            console.log(data)
+            //.value = ""
+        })
+    // }
+
+}
+function deleteMyMessage(id){
+    let url = `${baseURL}api/messages/delete/${id}`
+    let fetchParams = {
+        method: 'DELETE',
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
+        }
+    }
+    return  fetch(url, fetchParams)
+        .then(response => response.json())
+        .then(data => {
+            console.log(data)
+            displayMessagesPage()
+        })
+}
+
 
 
 
