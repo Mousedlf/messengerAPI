@@ -1,4 +1,4 @@
-const baseURL = "https://b1messenger.tk/"
+const baseURL = "https://b1messenger.imatrythis.tk/"
 
 const mainContainer = document.querySelector("#main")
 const messagesPageButton = document.querySelector("#messagesPage")
@@ -69,16 +69,16 @@ function getMessageTemplate(message) {
     let template
     if(message.author.username == myUsername){
         template = `
-                     <div id="${message.id}" class="editMessageForm mb-3 d-none  d-flex align-items-center">
+                     <!--<div id="${message.id}" class="editMessageForm mb-3 d d-flex align-items-center">
                         <input type="text" id="${message.id}" class="editMessageField bg-warning form-control rounded-pill" placeholder="Type in the new version of the message">
                         <i id="${message.id}" class="sendEdit mx-3 fa-sharp fa-solid fa-paper-plane text-secondary"></i>
                         <i id="${message.id}" class="fermerEdit fa-solid fa-xmark"></i>
-                     </div>
+                     </div>-->
                      <div id="${message.id}" class="d-flex align-items-center justify-content-start flex-row-reverse">
-                        <p id="messageContent" class="text-white py-1 px-3 bg-primary rounded-pill">${message.content}
+                        <input id="messageContent" class="text-white py-1 px-3 bg-primary rounded-pill">${message.content}
                             <i id="${message.id}" class="ms-4 edit fa-solid fa-pen"></i>
                             <i id="${message.id}" class="delete ms-2 fa-solid fa-trash"></i>
-                        </p>
+                        </input>
                         <p class="badge text-secondary fw-normal ms-2">${time}, ${date}</p>
                         <i id="${message.id}" class="happy ms-2 fa-solid fa-face-laugh"></i>
                      </div>
@@ -87,7 +87,6 @@ function getMessageTemplate(message) {
     } else {
         template = `
                     <div id="${message.id}" class="d-flex align-items-center">
-<!--                        <span class="circle bg-danger"></span>-->
                         <p>${message.author.username}</p>
                         <p class="text-white ms-2 py-1 px-3 bg-primary rounded-pill">${message.content}</p>
                     <div>
@@ -120,6 +119,7 @@ function getMessagesTemplate(messages) {
     })
     return messagesTemplate
 }
+
 async function getMessagesFromApi() {
 
     let url = `${baseURL}api/messages/`
@@ -228,14 +228,6 @@ async function displayMessagesPage() {
         })
     })
 }
-
-/*trouvé sur SO, comm de 2017: dans HTML : onmouseover="MouseOver(this);" onmouseout="MouseOut(this);"
-function MouseOver(elem) {
-    elem.style.color = "red";
-}
-function MouseOut(elem) {
-    elem.style.color = "blue";
-}*/
 
 
 function sendMessage() {
